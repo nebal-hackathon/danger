@@ -15,11 +15,11 @@ export default class App extends React.Component {
   }
   render() {
     if (this.state.page === 'Splash') {
-      return (<SplashPage go={ (page) => this.go(page) }/>)
+      return (<SplashPage go={ (page) => this.go(page) } />)
     } else if (this.state.page == 'Main') {
-      return (<MainPage />)
+      return (<MainPage go={ (page) => this.go(page) } />)
     } else if (this.state.page == 'Map') {
-      return (<MapPage />)
+      return (<MapPage go={ (page) => this.go(page) } />)
     }
     return (
       <View style={styles.container}>

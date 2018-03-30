@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Button } from '../components/Button';
+
 export default class MainPage extends React.Component {
   state = {
     latitude: null,
@@ -24,6 +26,9 @@ export default class MainPage extends React.Component {
         <Text>Main</Text>
         <Text>{this.state.latitude}</Text>
         <Text>{this.state.longitude}</Text>
+        <Button onPress={ () => {this.props.go('Map')} }>
+          다른곳을 가보자
+        </Button>
       </View>
     );
   }
