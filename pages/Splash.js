@@ -10,7 +10,7 @@ export default class SplashPage extends React.Component {
   componentDidMount() {
     this.setTimeout(() => {
       this.props.go('Main')
-    }, 500)
+    }, 50)
   }
   render() {
     return (

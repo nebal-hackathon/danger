@@ -11,7 +11,7 @@ export const Button = (props: {children: Chileren, onPress: Function}) => {
     <TouchableOpacity
       style={ styles.button }
       onPress={ props.onPress }>
-      <Text style={ styles.text }>{props.children}</Text>
+      {props.children}
     </TouchableOpacity>
   )
 }
@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#007aFF',
-    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 30,
+    height: 60,
+    width: 200,
     padding: 20
   },
-  text: {
-    color: 'white',
-  }
 });
