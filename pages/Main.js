@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 
 import { Button } from '../components/Button';
 import { getAddress } from '../utils/GoogleMaps';
+import { query } from '../utils/BigQuery'
 
 export default class MainPage extends React.Component {
   state = {
@@ -17,6 +18,10 @@ export default class MainPage extends React.Component {
         const { latitude, longitude } = pos.coords
         const address = await getAddress({ latitude, longitude })
         this.setState({ latitude, longitude, address })
+
+        const test = await query("SELECT * FROM [bigquery-public-data:openaq.global_air_quality] WHERE country='US'")
+        console.log(test)
+
       })
     }, 1000)
   }
