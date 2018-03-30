@@ -24,8 +24,6 @@ export default class MainPage extends React.Component {
         this.setState({ latitude, longitude, address })
 
         const test = await query("SELECT * FROM [bigquery-public-data:openaq.global_air_quality] WHERE country='US'")
-        console.log(test)
-
       })
     }, 1000)
   }
