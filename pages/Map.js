@@ -2,7 +2,7 @@ import React from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { BlueButton } from '../components/Button';
-import { getAirQualityPercent } from '../utils/getAirQualityPercentage'
+import { getAirQuality } from '../utils/getAirQuality'
 import { getCollisionQuality } from '../utils/getCollisionPercentage'
 import { getCrimeQuality} from '../utils/getCrimePercentage'
 
@@ -22,33 +22,17 @@ export default class MapPage extends React.Component {
     }
   }
 
-  onRegionChange = (region) => {
-    this.setState({ region });
-  }
-
-  componentDidMount() {
-    this.loading = setInterval(async () => {
-      if (!this.loading) {
-        return
-      }
-      if (this.longitude !== this.state.region.longitude || this.latitude !== this.state.region.latitude) {
-        this.longitude = this.state.region.longitude
-        this.latitude = this.state.region.latitude
-        if (this.longitude && this.latitude) {
-          const crimeRate = await getCrimeQuality(this.latitude, this.longitude)
-          // const carAccident = await getCollisionQuality(this.latitude, this.longitude)
-          // const airQuality = await getAirQualityPercent(this.latitude, this.longitude)
-          // console.log(crimeRate, carAccident )
-          // this.setState({ crimeRate: crimeRate, carAccident: carAccident})
-          // this.setState({ crimeRate: crimeRate, carAccident: carAccident, airQuality: airQuality })
-        }
-      }
-    }, 1000)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.loading)
-    this.loading = null
+  onRegionChangeComplete = async (region) => {
+    const crimeRate = await getCrimeQuality(region)
+    const carAccident = await getCollisionQuality(region)
+    const airQuality = await getAirQuality(region)
+    console.log(crimeRate, carAccident )
+    this.setState({
+      region,
+      crimeRate,
+      carAccident,
+      airQuality,
+    });
   }
 
   render() {
@@ -59,7 +43,7 @@ export default class MapPage extends React.Component {
           initialRegion={this.state.region}
           provider={PROVIDER_GOOGLE}
           customMapStyle={style}
-          onRegionChange={this.onRegionChange} />
+          onRegionChangeComplete={this.onRegionChangeComplete} />
         <View style={styles.popup} pointerEvents="none">
           <View style={styles.container} pointerEvents="none">
             <ImageBackground style={styles.box} source={require('../assets/map_box.png')}>

@@ -6,5 +6,5 @@ export const getAirQuality = async ({latitude, longitude }) => {
 				WHERE pollutant='pm25'
 				ORDER BY distance desc
 				LIMIT 1;
-				`))
+				`)).rows[0].f[0].v
 }
