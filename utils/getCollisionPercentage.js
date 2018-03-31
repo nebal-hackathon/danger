@@ -1,6 +1,6 @@
 import { query } from './BigQuery'
 
-export const getCollisionQuality = async ({latitude, longitude }) => {
+export const getCollisionQuality = async (latitude, longitude) => {
 	let col_max = await query(`SELECT sum(co) 
 			FROM (
 				SELECT count(*) AS co 

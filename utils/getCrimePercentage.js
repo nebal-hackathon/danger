@@ -1,6 +1,6 @@
 import { query } from './BigQuery'
 
-export const getCrimeQuality = async ({latitude, longitude }) => {
+export const getCrimeQuality = async (latitude, longitude) => {
 	let cri_max = await query(`SELECT sum(co) 
 			FROM (
 				SELECT count(*) AS co 
