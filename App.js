@@ -8,18 +8,18 @@ import MapPage from './pages/Map'
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { page: 'Splash' }
+    this.state = { page: 'Splash', data: null }
   }
-  go(page) {
-    this.setState({ page })
+  go(page, data) {
+    this.setState({ page, data })
   }
   render() {
     if (this.state.page === 'Splash') {
-      return (<SplashPage go={ (page) => this.go(page) } />)
+      return (<SplashPage data={this.state.data} go={ (page, data) => this.go(page, data) } />)
     } else if (this.state.page == 'Main') {
-      return (<MainPage go={ (page) => this.go(page) } />)
+      return (<MainPage data={this.state.data} go={ (page, data) => this.go(page, data) } />)
     } else if (this.state.page == 'Map') {
-      return (<MapPage go={ (page) => this.go(page) } />)
+      return (<MapPage data={this.state.data} go={ (page, data) => this.go(page, data) } />)
     }
     return (
       <View style={styles.container}>

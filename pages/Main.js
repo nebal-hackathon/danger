@@ -22,8 +22,6 @@ export default class MainPage extends React.Component {
         const { latitude, longitude } = pos.coords
         const address = await getAddress({ latitude, longitude })
         this.setState({ latitude, longitude, address })
-
-        const test = await query("SELECT * FROM [bigquery-public-data:openaq.global_air_quality] WHERE country='US'")
       })
     }, 1000)
   }
@@ -64,7 +62,7 @@ export default class MainPage extends React.Component {
                 <Text style={styles.deathValue}>{this.state.deathRate} %</Text>
               </View>
             </ImageBackground>
-            <Button onPress={ () => {this.props.go('Map')} }>
+            <Button onPress={ () => {this.props.go('Map', this.state)} }>
               <Image source={require('../assets/emoji.png')} />
               <Text style={styles.text}> 다른 곳 </Text>
               <Text style={styles.textBold}>가즈아</Text>
