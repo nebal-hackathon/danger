@@ -1,10 +1,10 @@
-import { query } from 'BigQuery'
+import { query } from './BigQuery'
 
-export const getAirQuality = async ({latitude, longitude }) => {
+export const getCollisionQuality = async ({latitude, longitude }) => {
 	let col_max = await query(`SELECT sum(co) 
 			FROM (
 				SELECT count(*) AS co 
-				FROM [bigquery-public-data:new_york.nypd_mv_collisions])
+				FROM [bigquery-public-data:new_york.nypd_mv_collisions])`)
 	let max_percent = 100
 	return (await query(`
 			SELECT (count(*)/${col_max})*${max_percent} FROM (

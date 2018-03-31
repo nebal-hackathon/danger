@@ -1,4 +1,4 @@
-import { query } from 'BigQuery'
+import { query } from './BigQuery'
 
 export const getAirQuality = async ({latitude, longitude }) => {
 	let pm25_max = await query(`SELECT max(value) FROM [bigquery-public-data:openaq.global_air_quality]`);
@@ -10,6 +10,6 @@ export const getAirQuality = async ({latitude, longitude }) => {
                     WHERE pollutant = "pm25"
                     ORDER BY distance desc LIMIT 1
                     );
-			`);
+			`));
 	
 }

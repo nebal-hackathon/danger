@@ -2,6 +2,9 @@ import React from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { BlueButton } from '../components/Button';
+import aqper from '../utils/getAirQualityPercentage'
+import cper from '../utils/getCollisionPercentage'
+import criper from '../utils/getCrimePercentage'
 
 export default class MapPage extends React.Component {
   state = {
@@ -12,9 +15,9 @@ export default class MapPage extends React.Component {
       longitudeDelta: 0.0421,
     },
     data: {
-      crimeRate: 0,
-      carAccident: 0,
-      airQuality: 0,
+      crimeRate: criper.getCrimeQuality(latitude, longitude),
+      carAccident: cper.getCollisionQuality(latitude, longitude),
+      airQuality: aqper.getAirQuality(latitude, longitude),
     }
   }
 
