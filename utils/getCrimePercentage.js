@@ -1,6 +1,6 @@
 import { query } from 'BigQuery'
 
-export const getAirQuality = async ({latitude, longitude }) => {
+export const getCrimePercentage = async ({latitude, longitude }) => {
 	let cri_max = await query(`SELECT sum(co) 
 			FROM (
 				SELECT count(*) AS co 

@@ -1,6 +1,6 @@
 import { query } from 'BigQuery'
 
-export const getAirQuality = async ({latitude, longitude }) => {
+export const getAirPercentage = async ({latitude, longitude }) => {
 	let pm25_max = await query(`SELECT max(value) FROM [bigquery-public-data:openaq.global_air_quality]`);
 	let max_percent = 100;
 	return (await query(`
