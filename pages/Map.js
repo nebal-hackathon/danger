@@ -2,6 +2,9 @@ import React from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { BlueButton } from '../components/Button';
+import { getAirQuality } from '../utils/getAirQualityPercentage'
+import { getCollisionQuality } from '../utils/getCollisionPercentage'
+import { getCrimeQuality} from '../utils/getCrimePercentage'
 
 export default class MapPage extends React.Component {
   state = {
@@ -11,15 +14,36 @@ export default class MapPage extends React.Component {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     },
-    data: {
-      crimeRate: 0,
-      carAccident: 0,
-      airQuality: 0,
-    }
+    crimeRate: 0,
+    carAccident: 0,
+    airQuality: 0,
   }
 
   onRegionChange = (region) => {
     this.setState({ region });
+  }
+
+  componentDidMount() {
+    this.loading = setInterval(async () => {
+      if (!this.loading) {
+        return
+      }
+      if (this.longitude !== this.state.region.longitude || this.latitude !== this.state.region.latitude) {
+        this.longitude = this.state.region.longitude
+        this.latitude = this.state.region.latitude
+        if (this.longitude && this.latitude) {
+          const crimeRate = getCrimeQuality(this.latitude, this.longitude)
+          const carAccident = getCollisionQuality(this.latitude, this.longitude)
+          const airQuality = getAirQuality(this.latitude, this.longitude)
+          this.setState({ crimeRate: await crimeRate, carAccident: await carAccident, airQuality: await airQuality })
+        }
+      }
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.loading)
+    this.loading = null
   }
 
   render() {
@@ -37,17 +61,17 @@ export default class MapPage extends React.Component {
               <View style={styles.info}>
                 <Image source={require('../assets/crime_blue.png')} />
                 <Text style={styles.infoName}>범죄율</Text>
-                <Text style={styles.infoValue}>{this.state.data.crimeRate} %</Text>
+                <Text style={styles.infoValue}>{this.state.crimeRate} %</Text>
               </View>
               <View style={styles.info}>
                 <Image source={require('../assets/car_blue.png')} />
                 <Text style={styles.infoName}>교통사고율</Text>
-                <Text style={styles.infoValue}>{this.state.data.carAccident} %</Text>
+                <Text style={styles.infoValue}>{this.state.carAccident} %</Text>
               </View>
               <View style={styles.info}>
                 <Image source={require('../assets/dust_blue.png')} />
                 <Text style={styles.infoName}>미세먼지 수치</Text>
-                <Text style={styles.infoValue}>{this.state.data.airQuality} %</Text>
+                <Text style={styles.infoValue}>{this.state.airQuality} %</Text>
               </View>
             </ImageBackground>
             <View style={styles.pin}>

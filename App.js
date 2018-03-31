@@ -6,6 +6,7 @@ import MainPage from './pages/Main'
 import MapPage from './pages/Map'
 
 YellowBox.ignoreWarnings([
+  'Warning: componentWillReceiveProps is deprecated',
   'Warning: componentWillMount is deprecated',
   'Warning: componentWillUpdate is deprecated',
   'Warning: componentWillReceiveProps is deprecated',

@@ -5,5 +5,9 @@ const getAccessToken = async () => (await axios.get('http://35.185.58.196/')).da
 
 export const query = async (query) => {
   const url = `${BASE_URL}?access_token=${await getAccessToken()}`
-  return (await axios.post(`${BASE_URL}?access_token=${await getAccessToken()}`, { query })).data
+  try {
+    return (await axios.post(url, { query })).data
+  } catch (exc) {
+    console.log(exc.response)
+  }
 }
