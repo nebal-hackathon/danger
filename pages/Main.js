@@ -17,13 +17,20 @@ export default class MainPage extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {
+    this.pos = setInterval(() => {
       const pos = navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords
         const address = await getAddress({ latitude, longitude })
-        this.setState({ latitude, longitude, address })
+        if (this.pos) {
+          this.setState({ latitude, longitude, address })
+        }
       })
     }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.pos)
+    this.pos = null
   }
 
   render() {
@@ -62,7 +69,11 @@ export default class MainPage extends React.Component {
                 <Text style={styles.deathValue}>{this.state.deathRate} %</Text>
               </View>
             </ImageBackground>
-            <Button onPress={ () => {this.props.go('Map', this.state)} }>
+            <Button onPress={ () => {
+              if (this.state.longitude && this.state.latitude) {
+                this.props.go('Map', this.state)
+              }
+            } }>
               <Image source={require('../assets/emoji.png')} />
               <Text style={styles.text}> 다른 곳 </Text>
               <Text style={styles.textBold}>가즈아</Text>
