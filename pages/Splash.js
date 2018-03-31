@@ -10,14 +10,13 @@ export default class SplashPage extends React.Component {
   componentDidMount() {
     this.setTimeout(() => {
       this.props.go('Main')
-    }, 50)
+    }, 2000)
   }
   render() {
     return (
       <View style={styles.container}>
-		<ImageBackground style={styles.background} source={require('../assets/bg.png')}>
-        <Text>Splash</Text>
-		</ImageBackground>
+        <ImageBackground style={styles.background} source={require('../assets/splash.png')}>
+        </ImageBackground>
       </View>
     );
   }
