@@ -31,8 +31,8 @@ export default class MapPage extends React.Component {
           provider={PROVIDER_GOOGLE}
           customMapStyle={style}
           onRegionChange={this.onRegionChange} />
-        <View style={styles.popup}>
-          <View style={styles.container}>
+        <View style={styles.popup} pointerEvents="none">
+          <View style={styles.container} pointerEvents="none">
             <ImageBackground style={styles.box} source={require('../assets/map_box.png')}>
               <View style={styles.info}>
                 <Image source={require('../assets/crime_blue.png')} />
