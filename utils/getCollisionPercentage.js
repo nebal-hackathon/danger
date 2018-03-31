@@ -1,17 +1,8 @@
 import { query } from './BigQuery'
+import { getCollision } from './getCollision'
 
-export const getCollisionQuality = async (latitude, longitude) => {
-	let col_max = await query(`SELECT sum(co) 
-			FROM (
-				SELECT count(*) AS co 
-				FROM [bigquery-public-data:new_york.nypd_mv_collisions])`)
-	let max_percent = 100
-	return (await query(`
-			SELECT (count(*)/${col_max})*${max_percent} FROM (
-    SELECT POW(ABS(${latitude} - latitude),2) + POW(ABS(${longitude} - longitude),2) AS distance
-    FROM [bigquery-public-data:new_york.nypd_mv_collisions]
-      ORDER BY distance desc LIMIT 1
-    )
-			`));
-	
+export const getCollisionQuality = async ({latitude, longitude}) => {
+	const cri_max = (await query(`SELECT count(*) FROM [bigquery-public-data:new_york.nypd_mv_collisions]`)).rows[0].f[0].v
+	const count = (await getCollision({ latitude, longitude })).rows[0].f[0].v
+	return count/cri_max*100 + 5
 }

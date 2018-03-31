@@ -2,21 +2,24 @@ import React from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { BlueButton } from '../components/Button';
-import { getAirQuality } from '../utils/getAirQualityPercentage'
+import { getAirQualityPercent } from '../utils/getAirQualityPercentage'
 import { getCollisionQuality } from '../utils/getCollisionPercentage'
 import { getCrimeQuality} from '../utils/getCrimePercentage'
 
 export default class MapPage extends React.Component {
-  state = {
-    region: {
-      latitude: this.props.data.latitude,
-      longitude: this.props.data.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-    crimeRate: 0,
-    carAccident: 0,
-    airQuality: 0,
+  constructor (props) {
+    super(props)
+    this.state = {
+      region: {
+        latitude: props.data.latitude,
+        longitude: props.data.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
+      crimeRate: 0,
+      carAccident: 0,
+      airQuality: 0,
+    }
   }
 
   onRegionChange = (region) => {
@@ -32,10 +35,12 @@ export default class MapPage extends React.Component {
         this.longitude = this.state.region.longitude
         this.latitude = this.state.region.latitude
         if (this.longitude && this.latitude) {
-          const crimeRate = getCrimeQuality(this.latitude, this.longitude)
-          const carAccident = getCollisionQuality(this.latitude, this.longitude)
-          const airQuality = getAirQuality(this.latitude, this.longitude)
-          this.setState({ crimeRate: await crimeRate, carAccident: await carAccident, airQuality: await airQuality })
+          const crimeRate = await getCrimeQuality(this.latitude, this.longitude)
+          // const carAccident = await getCollisionQuality(this.latitude, this.longitude)
+          // const airQuality = await getAirQualityPercent(this.latitude, this.longitude)
+          // console.log(crimeRate, carAccident )
+          // this.setState({ crimeRate: crimeRate, carAccident: carAccident})
+          // this.setState({ crimeRate: crimeRate, carAccident: carAccident, airQuality: airQuality })
         }
       }
     }, 1000)

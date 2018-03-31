@@ -1,15 +1,9 @@
 import { query } from './BigQuery'
+import { getAirQuality } from './getAirQuality'
 
-export const getAirQuality = async (latitude, longitude) => {
-	let pm25_max = await query(`SELECT max(value) FROM [bigquery-public-data:openaq.global_air_quality]`);
-	let max_percent = 100;
-	return (await query(`
-				SELECT (GREATEST(value,0)/${pm25_max})*{max_percent} FROM (
-                SELECT value, POW(ABS(${latitude} - latitude),2) + POW(ABS(${longitude} - longitude),2) AS distance
-                    FROM [bigquery-public-data:openaq.global_air_quality]
-                    WHERE pollutant = "pm25"
-                    ORDER BY distance desc LIMIT 1
-                    );
-			`));
-	
+export const getAirQualityPercent = async ({latitude, longitude}) => {
+    const pm25_max = (await query(`SELECT max(value) FROM [bigquery-public-data:openaq.global_air_quality]`)).rows[0].f[0].v
+    const count = (await getAirQuality(latitude, longitude))
+    console.log(count)
+    return (count < 0 ? 0 : count)/pm25_max*100
 }
