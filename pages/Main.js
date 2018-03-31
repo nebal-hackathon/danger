@@ -4,33 +4,48 @@ import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { Button } from '../components/Button';
 import { getAddress } from '../utils/GoogleMaps';
 import { query } from '../utils/BigQuery'
+import { getAirQuality } from '../utils/getAirQuality'
+import { getCollisionQuality } from '../utils/getCollisionPercentage'
+import { getCrimeQuality} from '../utils/getCrimePercentage'
 
 export default class MainPage extends React.Component {
   state = {
-    address: null,
-    latitude: null,
-    longitude: null,
-    crimeRate: 0,
-    carAccident: 0,
-    airQuality: 0,
-    deathRate: 0,
+    region: {
+      address: null,
+      latitude: null,
+      longitude: null,
+    },
+    data: {
+      crimeRate: 0,
+      carAccident: 0,
+      airQuality: 0,
+      deathRate: 0,
+    }
   }
 
   componentDidMount() {
-    this.pos = setInterval(() => {
-      const pos = navigator.geolocation.getCurrentPosition(async pos => {
+    setInterval(() => {
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const address = await getAddress(pos.coords)
         const { latitude, longitude } = pos.coords
-        const address = await getAddress({ latitude, longitude })
-        if (this.pos) {
-          this.setState({ latitude, longitude, address })
-        }
+        const crimeRate = await getCrimeQuality(pos.coords)
+        const carAccident = await getCollisionQuality(pos.coords)
+        const airQuality = await getAirQuality(pos.coords)
+        this.setState({
+          region: {
+            address,
+            latitude,
+            longitude
+          },
+          data: {
+            crimeRate,
+            carAccident,
+            airQuality,
+            deathRate: Number(crimeRate) + Number(carAccident) + Number(airQuality)
+          }
+        })
       })
     }, 1000)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.pos)
-    this.pos = null
   }
 
   render() {
@@ -39,24 +54,24 @@ export default class MainPage extends React.Component {
         <ImageBackground style={styles.background} source={require('../assets/bg.png')}>
           <View style={styles.address}>
             <Image source={require('../assets/pin.png')} />
-            <Text style={styles.addressText}>{this.state.address}</Text>
+            <Text style={styles.addressText}>{this.state.region.address}</Text>
           </View>
           <ImageBackground style={styles.background} source={require('../assets/footer.png')}>
             <View style={styles.infos}>
               <View style={styles.info}>
                 <Image source={require('../assets/crime.png')} />
                 <Text style={styles.infoName}>범죄율</Text>
-                <Text style={styles.infoValue}>{this.state.crimeRate} %</Text>
+                <Text style={styles.infoValue}>{this.state.data.crimeRate} %</Text>
               </View>
               <View style={styles.info}>
                 <Image source={require('../assets/car.png')} />
                 <Text style={styles.infoName}>교통사고율</Text>
-                <Text style={styles.infoValue}>{this.state.carAccident} %</Text>
+                <Text style={styles.infoValue}>{this.state.data.carAccident} %</Text>
               </View>
               <View style={styles.info}>
                 <Image source={require('../assets/dust.png')} />
                 <Text style={styles.infoName}>미세먼지 수치</Text>
-                <Text style={styles.infoValue}>{this.state.airQuality} %</Text>
+                <Text style={styles.infoValue}>{this.state.data.airQuality} %</Text>
               </View>
             </View>
             <Image source={require('../assets/line.png')} />
@@ -66,18 +81,9 @@ export default class MainPage extends React.Component {
                   <Text style={styles.deathText}>사망할 </Text>
                   <Text style={styles.deathTextBold}>확률</Text>
                 </View>
-                <Text style={styles.deathValue}>{this.state.deathRate} %</Text>
+                <Text style={styles.deathValue}>{this.state.data.deathRate} %</Text>
               </View>
             </ImageBackground>
-            <Button onPress={ () => {
-              if (this.state.longitude && this.state.latitude) {
-                this.props.go('Map', this.state)
-              }
-            } }>
-              <Image source={require('../assets/emoji.png')} />
-              <Text style={styles.text}> 다른 곳 </Text>
-              <Text style={styles.textBold}>가즈아</Text>
-            </Button>
           </ImageBackground>
         </ImageBackground>
       </View>
