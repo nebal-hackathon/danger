@@ -1,9 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { YellowBox, StyleSheet, Text, View } from 'react-native';
 
 import SplashPage from './pages/Splash'
 import MainPage from './pages/Main'
 import MapPage from './pages/Map'
+
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillUpdate is deprecated',
+  'Warning: componentWillReceiveProps is deprecated',
+  'Module RCTImageLoader requires',
+]);
 
 export default class App extends React.Component {
   constructor(props) {
